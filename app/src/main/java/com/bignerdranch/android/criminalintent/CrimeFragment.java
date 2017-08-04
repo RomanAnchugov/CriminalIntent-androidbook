@@ -1,6 +1,8 @@
 package com.bignerdranch.android.criminalintent;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +17,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import java.util.UUID;
+
 import static android.R.attr.format;
 
 /**
@@ -28,10 +32,31 @@ public class CrimeFragment extends Fragment {
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
 
+    public static final String ARG_CRIME_ID = "crime_id";
+
+    public static CrimeFragment newInstance(UUID crimeId){
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_CRIME_ID, crimeId);
+
+        CrimeFragment fragment = new CrimeFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCrime = new Crime();
+        UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
+        mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Intent intent = new Intent();
+        intent.putExtra("index", mCrime.getId());
+        getActivity().setResult(Activity.RESULT_OK, intent);
     }
 
     @Nullable
@@ -56,6 +81,7 @@ public class CrimeFragment extends Fragment {
 
             }
         });
+        mTitleField.setText(mCrime.getTitle());
 
         mDateButton = (Button)v.findViewById(R.id.crime_date);
         mDateButton.setText(DateFormat.format("E,dd MMM yyyy",mCrime.getDate()));
@@ -68,6 +94,7 @@ public class CrimeFragment extends Fragment {
                 mCrime.setSolved(b);
             }
         });
+        mSolvedCheckBox.setChecked(mCrime.isSolved());
 
         return v;
     }
