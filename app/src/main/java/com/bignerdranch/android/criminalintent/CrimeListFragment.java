@@ -93,7 +93,7 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-            Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
+            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
             startActivityForResult(intent, REQUEST_CRIMINAL);
         }
     }
@@ -102,7 +102,7 @@ public class CrimeListFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        updateUI((UUID)data.getSerializableExtra(CrimeActivity.EXTRA_CRIME_ID));
+        updateUI((UUID)data.getSerializableExtra(CrimePagerActivity.EXTRA_CRIME_ID));
     }
 
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder>{
