@@ -102,7 +102,7 @@ public class CrimeListFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        updateUI((UUID)data.getSerializableExtra(CrimePagerActivity.EXTRA_CRIME_ID));
+        updateUI();
     }
 
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder>{
