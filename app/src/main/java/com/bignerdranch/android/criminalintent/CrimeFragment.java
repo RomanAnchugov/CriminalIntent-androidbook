@@ -22,6 +22,7 @@ import android.widget.EditText;
 import java.util.Date;
 import java.util.UUID;
 
+import static android.R.attr.fingerprintAuthDrawable;
 import static android.R.attr.format;
 import static com.bignerdranch.android.criminalintent.DatePickerFragment.ARG_DATE;
 import static com.bignerdranch.android.criminalintent.DatePickerFragment.EXTRA_DATE;
@@ -37,6 +38,7 @@ public class CrimeFragment extends Fragment {
     private EditText mTitleField;
     private Button mDateButton;
     private Button mTimeButton;
+    private Button mDeleteButton;
     private CheckBox mSolvedCheckBox;
 
     public static final String ARG_CRIME_ID = "crime_id";
@@ -104,7 +106,7 @@ public class CrimeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_crime, container, false);
+        final View v = inflater.inflate(R.layout.fragment_crime, container, false);
 
         mTitleField = (EditText) v.findViewById(R.id.crime_title);
         mTitleField.addTextChangedListener(new TextWatcher() {
@@ -149,6 +151,14 @@ public class CrimeFragment extends Fragment {
 
                 dialog.show(manager, DIALOG_TIME);
 
+            }
+        });
+        mDeleteButton = (Button) v.findViewById(R.id.delete_crime_button);
+        mDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CrimeLab.get(getActivity()).getCrimes().remove(mCrime);
+                getActivity().finish();
             }
         });
 
