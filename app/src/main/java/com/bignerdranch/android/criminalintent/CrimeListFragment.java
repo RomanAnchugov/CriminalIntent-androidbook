@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ import static com.bignerdranch.android.criminalintent.CrimePagerActivity.EXTRA_S
 public class CrimeListFragment extends Fragment {
 
     private RecyclerView mCrimeRecyclerView;
+    private Button mCreateFirstCrimeButton;
     private CrimeAdapter mAdapter;
     private boolean mSubtitleVisible;
 
@@ -74,6 +76,19 @@ public class CrimeListFragment extends Fragment {
         if(savedInstanceState != null){
             mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBVLE);
         }
+
+        mCreateFirstCrimeButton = (Button) view.findViewById(R.id.create_first_crime_button);
+        mCreateFirstCrimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Crime crime = new Crime();
+                CrimeLab.get(getActivity()).addCrime(crime);
+                Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getId());
+                intent.putExtra(EXTRA_SUBTITLE_VISIBLE, mSubtitleVisible);
+                startActivity(intent);
+                mCreateFirstCrimeButton.setVisibility(View.INVISIBLE);
+            }
+        });
         updateUI();
 
         return view;
@@ -93,7 +108,7 @@ public class CrimeListFragment extends Fragment {
 
     private void updateSubtitle(){
         int crimeCount = CrimeLab.get(getActivity()).getCrimes().size();
-        String subtitle = getString(R.string.subtitle_format, crimeCount + "");
+        String subtitle = getResources().getQuantityString(R.plurals.subtitle_plural, crimeCount, crimeCount);
 
         if(!mSubtitleVisible){
             subtitle = null;
