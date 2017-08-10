@@ -62,6 +62,9 @@ public class CrimeListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if(CrimeLab.get(getActivity()).getCrimes().size() == 0){
+            mCreateFirstCrimeButton.setVisibility(View.VISIBLE);
+        }
         updateUI();
         updateSubtitle();
     }
