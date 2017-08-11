@@ -110,6 +110,13 @@ public class CrimeFragment extends Fragment {
         CrimeLab.get(getActivity()).updateCrime(mCrime);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        CrimeLab.get(getActivity()).updateCrime(mCrime);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -165,7 +172,7 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                CrimeLab.get(getActivity()).getCrimes().remove(mCrime);
+                CrimeLab.get(getContext()).deleteCrime(mCrime);
                 getActivity().finish();
             }
         });

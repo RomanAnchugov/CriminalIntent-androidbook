@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.bignerdranch.android.criminalintent.database.CrimeBaseHelper;
 import com.bignerdranch.android.criminalintent.database.CrimeCursorWrapper;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.bignerdranch.android.criminalintent.database.CrimesDbSchema.CrimeTable.Cols.*;
+import static com.bignerdranch.android.criminalintent.database.CrimesDbSchema.CrimeTable.NAME;
 
 /**
  * Created by Roman on 01.08.2017.
@@ -73,9 +75,14 @@ public class CrimeLab {
     public void addCrime(Crime c){
         ContentValues values = getContentValues(c);
 
-        mDatabase.insert(CrimesDbSchema.CrimeTable.NAME, null, values);
+        mDatabase.insert(NAME, null, values);
     }
 
+    public void deleteCrime(Crime crime){
+        String uuidString = crime.getId().toString();
+
+        mDatabase.delete(NAME, UUID + " = ?", new String[]{uuidString});
+    }
 
     private static ContentValues getContentValues(Crime crime){
         ContentValues values = new ContentValues();
@@ -91,12 +98,12 @@ public class CrimeLab {
         String uuidString = crime.getId().toString();
         ContentValues values = getContentValues(crime);
 
-        mDatabase.update(CrimesDbSchema.CrimeTable.NAME, values, UUID + " = ?", new String[]{uuidString});
+        mDatabase.update(NAME, values, UUID + " = ?", new String[]{uuidString});
     }
 
     private CrimeCursorWrapper queryCrimes(String whereClause, String[] whereArgs){
         Cursor cursor = mDatabase.query(
-                CrimesDbSchema.CrimeTable.NAME,
+                NAME,
                 null,//null - выбирает все
                 whereClause,
                 whereArgs,
