@@ -81,6 +81,7 @@ public class CrimeListFragment extends Fragment {
         }
 
         mCreateFirstCrimeButton = (Button) view.findViewById(R.id.create_first_crime_button);
+        if(CrimeLab.get(getActivity()).getCrimes().size() != 0)mCreateFirstCrimeButton.setVisibility(View.INVISIBLE);
         mCreateFirstCrimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,8 +106,10 @@ public class CrimeListFragment extends Fragment {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
         }else{
+            mAdapter.setCrimes(crimes);
             mAdapter.notifyDataSetChanged();
         }
+        updateSubtitle();
     }
 
     private void updateSubtitle(){
@@ -205,6 +208,10 @@ public class CrimeListFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mCrimes.size();
+        }
+
+        public void setCrimes(List<Crime> crimes){
+            mCrimes = crimes;
         }
     }
 

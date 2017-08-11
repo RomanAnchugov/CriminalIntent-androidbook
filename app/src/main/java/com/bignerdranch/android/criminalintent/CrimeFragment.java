@@ -103,6 +103,13 @@ public class CrimeFragment extends Fragment {
         getActivity().setResult(Activity.RESULT_OK, intent);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        CrimeLab.get(getActivity()).updateCrime(mCrime);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -157,6 +164,7 @@ public class CrimeFragment extends Fragment {
         mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 CrimeLab.get(getActivity()).getCrimes().remove(mCrime);
                 getActivity().finish();
             }
