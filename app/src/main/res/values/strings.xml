@@ -29,6 +29,7 @@
     <string name="crime_report_subject">CriminalIntent Crime Report</string>
     <string name="send_report">Send crime report</string>
 
+    <string name="phone_to_subject_text">call subject</string>
 
 
 </resources>

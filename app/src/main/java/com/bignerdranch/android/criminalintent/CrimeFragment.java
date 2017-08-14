@@ -49,6 +49,7 @@ public class CrimeFragment extends Fragment {
     private CheckBox mSolvedCheckBox;
     private Button mReportButton;
     private Button mSuspectButton;
+    private Button mPhoneSubject;
 
     public static final String ARG_CRIME_ID = "crime_id";
     public static final String DIALOG_DATE = "DialogDate";
@@ -56,6 +57,7 @@ public class CrimeFragment extends Fragment {
     public static final int REQUEST_DATE = 0;
     public static final int REQUEST_TIME = 1;
     public static final int REQUEST_CONTACT = 2;
+    public static final int REQUEST_CALL = 3;
 
     public static CrimeFragment newInstance(UUID crimeId){
         Bundle args = new Bundle();
@@ -114,6 +116,26 @@ public class CrimeFragment extends Fragment {
                 c.close();
             }
 
+        }else if(requestCode == REQUEST_CALL && data != null){
+            Uri contactUri = data.getData();
+
+            String[] queryField = new String[]{ContactsContract.CommonDataKinds.Phone._ID};
+            Cursor c = getActivity().getContentResolver().query(contactUri, queryField, null, null, null);
+
+            try{
+                if(c.getCount() == 0){
+                    return;
+                }
+                c.moveToFirst();
+                String number = c.getString(0);
+
+                Uri numberUri = Uri.parse("tel:" + number);
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(numberUri);
+                startActivity(intent);
+            }finally {
+                c.close();
+            }
         }
     }
 
@@ -219,12 +241,13 @@ public class CrimeFragment extends Fragment {
         mReportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(Intent.ACTION_SEND);
-                i.setType("text/plain");
-                i.putExtra(Intent.EXTRA_TEXT, getCrimeReport());
-                i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject));
-                i = Intent.createChooser(i, getString(R.string.send_report));
-                startActivity(i);
+
+                ShareCompat.IntentBuilder intentBuilder = ShareCompat.IntentBuilder.from(getActivity());
+                intentBuilder.setType("text/plain");
+                intentBuilder.setText(getCrimeReport());
+                intentBuilder.setSubject(getString(R.string.crime_report_subject));
+                intentBuilder.setChooserTitle(getString(R.string.send_report));
+                startActivity(intentBuilder.createChooserIntent());
             }
         });
 
@@ -235,6 +258,14 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivityForResult(pickContact, REQUEST_CONTACT);
+            }
+        });
+
+        mPhoneSubject = (Button) v.findViewById(R.id.crime_phone_suspect_button);
+        mPhoneSubject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(pickContact,REQUEST_CALL);
             }
         });
 
