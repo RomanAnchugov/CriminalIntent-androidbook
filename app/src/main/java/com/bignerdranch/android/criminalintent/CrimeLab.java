@@ -90,6 +90,7 @@ public class CrimeLab {
         values.put(TITLE, crime.getTitle());
         values.put(DATE, crime.getDate().toString());
         values.put(SOLVED, crime.isSolved() ? 1 : 0);
+        values.put(SUSPECT, crime.getSuspect());
 
         return values;
     }

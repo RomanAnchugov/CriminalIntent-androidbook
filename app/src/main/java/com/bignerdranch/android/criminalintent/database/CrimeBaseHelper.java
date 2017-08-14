@@ -24,7 +24,7 @@ public class CrimeBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("create table " + NAME + "(" + " _id integer primary key autoincrement, " +
-        Cols.UUID + ", " + Cols.TITLE + ", " + Cols.DATE + ", " + Cols.SOLVED + ")");
+        Cols.UUID + ", " + Cols.TITLE + ", " + Cols.DATE + ", " + Cols.SOLVED + ", " + Cols.SUSPECT +")");
     }
 
     @Override
