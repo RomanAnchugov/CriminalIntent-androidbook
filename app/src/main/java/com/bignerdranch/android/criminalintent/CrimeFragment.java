@@ -20,6 +20,7 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -32,6 +33,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import static com.bignerdranch.android.criminalintent.DatePickerFragment.EXTRA_DATE;
+import static com.bignerdranch.android.criminalintent.PhotoViewFragment.EXTRA_PHOTO;
 import static com.bignerdranch.android.criminalintent.TimePickerFragment.EXTRA_TIME;
 
 /**
@@ -304,7 +306,26 @@ public class CrimeFragment extends Fragment {
         });
 
         mPhotoView = (ImageView) v.findViewById(R.id.crime_photo);
-        updatePhotoView();
+        mPhotoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), PhotoViewFragment.class);
+                intent.putExtra(EXTRA_PHOTO, mPhotoFile.getPath());
+                Bundle bundle = new Bundle();
+                bundle.putString(EXTRA_PHOTO, mPhotoFile.getPath());
+                Fragment fragment = new PhotoViewFragment();
+                fragment.setArguments(bundle);
+                getFragmentManager().beginTransaction().add(fragment, "a").commit();
+            }
+        });
+        ViewTreeObserver observer = mPhotoView.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                updatePhotoView();
+            }
+
+        });
 
         return v;
     }
