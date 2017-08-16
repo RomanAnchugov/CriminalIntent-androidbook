@@ -4,18 +4,21 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
+import android.os.Environment;
 
 import com.bignerdranch.android.criminalintent.database.CrimeBaseHelper;
 import com.bignerdranch.android.criminalintent.database.CrimeCursorWrapper;
-import com.bignerdranch.android.criminalintent.database.CrimesDbSchema;
-import com.bignerdranch.android.criminalintent.database.CrimesDbSchema.CrimeTable.Cols;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.bignerdranch.android.criminalintent.database.CrimesDbSchema.CrimeTable.Cols.*;
+import static com.bignerdranch.android.criminalintent.database.CrimesDbSchema.CrimeTable.Cols.DATE;
+import static com.bignerdranch.android.criminalintent.database.CrimesDbSchema.CrimeTable.Cols.SOLVED;
+import static com.bignerdranch.android.criminalintent.database.CrimesDbSchema.CrimeTable.Cols.SUSPECT;
+import static com.bignerdranch.android.criminalintent.database.CrimesDbSchema.CrimeTable.Cols.TITLE;
+import static com.bignerdranch.android.criminalintent.database.CrimesDbSchema.CrimeTable.Cols.UUID;
 import static com.bignerdranch.android.criminalintent.database.CrimesDbSchema.CrimeTable.NAME;
 
 /**
@@ -25,8 +28,6 @@ import static com.bignerdranch.android.criminalintent.database.CrimesDbSchema.Cr
 public class CrimeLab {
 
     private static CrimeLab sCrimeLab;
-
-
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
@@ -113,6 +114,18 @@ public class CrimeLab {
                 null//orderBy
         );
         return new CrimeCursorWrapper(cursor);
+    }
+
+    public File getPhotoFile(Crime crime){
+        File externalFilesDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        if(externalFilesDir == null){
+            return null;
+        }
+
+        return new File(externalFilesDir, crime.getPhotoFileName());
+
+
     }
 
 }
