@@ -4,12 +4,16 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.view.View;
 
 /**
  * Created by romananchugov on 15.08.17.
  */
 
 public class PictureUtils {
+    public static Bitmap getScaledBitmap(String path, View container){
+        return getScaledBitmap(path, container.getWidth(), container.getHeight());
+    }
 
     public static Bitmap getScaledBitmap(String path, int distWidth, int distHeight){
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -18,6 +22,7 @@ public class PictureUtils {
 
         float scrWidth = options.outWidth;
         float scrHeight = options.outHeight;
+
 
         int inSampleSize = 1;
         if(scrHeight > distHeight || scrWidth > distWidth){

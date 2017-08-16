@@ -144,7 +144,7 @@ public class CrimeFragment extends Fragment {
                 c.close();
             }
         }else if(requestCode == REQUEST_PHOTO){
-            updatePhotoView();
+            updatePhotoView(mPhotoView);
         }
     }
 
@@ -322,7 +322,7 @@ public class CrimeFragment extends Fragment {
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                updatePhotoView();
+                updatePhotoView(mPhotoView);
             }
 
         });
@@ -350,11 +350,16 @@ public class CrimeFragment extends Fragment {
         return getString(R.string.crime_report, mCrime.getTitle(), dateString, solvedString, suspect);
     }
 
-    private void updatePhotoView(){
+    private void updatePhotoView(View container){
         if(mPhotoFile == null || !mPhotoFile.exists()){
             mPhotoView.setImageDrawable(null);
         }else{
-            Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
+            Bitmap bitmap;
+            if(container == null){
+                bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
+            }else{
+                bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), container);
+            }
             mPhotoView.setImageBitmap(bitmap);
         }
     }
